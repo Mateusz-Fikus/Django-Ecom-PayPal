@@ -14,28 +14,7 @@ for(i = 0; i < updateBtns.length; i++){
         }
     })
 }
-/*
-function updateUserOrder(productID, action){
-	console.log('User is authenticated, sending data...')
 
-		var url = '/update_item/'
-
-		fetch(url, {
-			method:'POST',
-			headers:{
-				'Content-Type':'application/json',
-				'X-CSRFToken':csrftoken,
-			}, 
-			body:JSON.stringify({'productID':productID, 'action':action})
-		})
-		.then((response) => {
-		   return response.json();
-		})
-		.then((data) => {
-		    location.reload()
-		});
-}
-*/
 
 function updateUserOrder(productID, action){
 

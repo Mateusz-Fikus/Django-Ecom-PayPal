@@ -43,8 +43,9 @@ def checkout(request):
 
 def updateItem(request):
 
-    data = json.load(request.data)
-    
-
+    data = json.loads(request.body)
+    productID = data["productID"]
+    action = data["action"]
+    print(productID, action)
 
     return JsonResponse('item was added', safe=False)
