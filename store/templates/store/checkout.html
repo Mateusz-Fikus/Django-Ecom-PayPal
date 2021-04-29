@@ -28,7 +28,7 @@
                         <input class="form-control" type="text" name="city" placeholder="City..">
                     </div>
                     <div class="form-field">
-                        <input class="form-control" type="text" name="state" placeholder="State..">
+                        <input class="form-control" type="text" name="state" placeholder="Vovoideship">
                     </div>
                     <div class="form-field">
                         <input class="form-control" type="text" name="zipcode" placeholder="Zip code..">
@@ -45,6 +45,7 @@
         <br>
         <div class="box-element hidden" id="payment-info">
             <small>PayPal Options</small>
+            <button id="make-payment">Make payment</button>
         </div>
     </div>
 
@@ -69,7 +70,65 @@
 </div>
 
 
+<script>
+    var form = document.getElementById('form')
+    var total = '{{order.get_cart_total|floatformat:2}}'
 
+    if(user != 'AnonymousUser'){
+        document.getElementById('user-info').innerHTML = ''
+    }
+
+
+    form.addEventListener('submit', function(e){
+        e.preventDefault()
+        console.log('submitted')
+        document.getElementById('form-button').classList.add('hidden')
+        document.getElementById('payment-info').classList.remove('hidden')
+    })
+
+    document.getElementById('make-payment').addEventListener('click', function(e){
+        submitFormData()
+    })
+
+    function submitFormData(){
+        console.log('payment button clicked')
+
+        var userFormData = {
+            'name':null,
+            'email':null,
+            'total':total
+        }
+
+        var shippingInfo = {
+            'address': form.address.value,
+            'city':form.city.value,
+            'vovoideship':form.state.value,
+            'zipcode':form.zipcode.value,
+        }
+
+        if(user == 'AnonymousUser'){
+            userFormData.name = form.name.value
+            userFormData.city = form.city.value
+        }
+
+        var url = '/process_order/'
+        fetch(url, {
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json',
+                'X-CSRFToken':csrftoken,
+            },
+            body:JSON.stringify({'form':userFormData, 'shipping':shippingInfo})
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log("succes: ", data)
+            alert('transaction completed')
+            window.location.href = "{% url 'main_page' %}"
+        })
+    }
+
+</script>
 
 
 

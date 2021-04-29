@@ -15,7 +15,7 @@ class Customer(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=200, null=True)
-    price = models.FloatField()
+    price = models.DecimalField(max_digits=8, decimal_places=2)
     desc = models.TextField(null=True, blank=True)
     stock = models.IntegerField()
     image = models.ImageField(upload_to="product_pictures")
@@ -51,6 +51,9 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.SET_NULL, blank=True, null=True)
     quantity = models.IntegerField(default=0, null=True, blank=True)
     date_added = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return str(self.order.transaction_id)
 
     @property
     def get_total(self):
@@ -60,10 +63,10 @@ class OrderItem(models.Model):
 class ShippingAddress(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True)
     order = models.ForeignKey(Order, on_delete=models.SET_NULL, blank=True, null=True)
-    adress = models.CharField(max_length=200, null=True)
-    city = models.CharField(max_length=200, null=True)
-    vovoideship = models.CharField(max_length=200, null=True)
-    zip_code = models.CharField(max_length=200, null=True)
+    adress = models.CharField(max_length=200, null=False)
+    city = models.CharField(max_length=200, null=False)
+    vovoideship = models.CharField(max_length=200, null=False)
+    zip_code = models.CharField(max_length=200, null=False)
     date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
