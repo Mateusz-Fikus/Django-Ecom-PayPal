@@ -45,9 +45,14 @@
         <br>
         <div class="box-element hidden" id="payment-info">
             <small>PayPal Options</small>
+            <div id="paypal-button-container">
+
+            </div>
             <button id="make-payment">Make payment</button>
         </div>
+
     </div>
+
 
     <div class="col-lg-6">
         <div class="box-element">
@@ -69,6 +74,35 @@
     </div>
 </div>
 
+<script src="https://www.paypal.com/sdk/js?client-id=AbNrY91KUCy1mjRxlI-nRbxIeFGd27wMjuw12gOKSt8ujOoPRg0zwav8O2QJz9vVy1CYgUJkgIwCic9j&currency=USD"></script>
+
+<script>
+    var total = '{{order.get_cart_total}}'
+    // Render the PayPal button into #paypal-button-container
+    paypal.Buttons({
+
+        // Set up the transaction
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: parseFloat(total).toFixed(2)
+                    }
+                }]
+            });
+        },
+
+        // Finalize the transaction
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                // Show a success message to the buyer
+                alert('Transaction completed by ' + details.payer.name.given_name + '!');
+            });
+        }
+
+
+    }).render('#paypal-button-container');
+</script>
 
 <script>
     var form = document.getElementById('form')
@@ -86,9 +120,10 @@
         document.getElementById('payment-info').classList.remove('hidden')
     })
 
-    document.getElementById('make-payment').addEventListener('click', function(e){
+   /* document.getElementById('make-payment').addEventListener('click', function(e){
         submitFormData()
     })
+    */
 
     function submitFormData(){
         console.log('payment button clicked')
@@ -124,6 +159,9 @@
         .then((data) => {
             console.log("succes: ", data)
             alert('transaction completed')
+
+            cart = {}
+            document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
             window.location.href = "{% url 'main_page' %}"
         })
     }
