@@ -1,2 +1,2 @@
-# Django-Stripe_payments
-## WORK IN PROGRESS!
+# Django Ecommerce with PayPal
+## Guest orders, Accounts, Dummy payments
